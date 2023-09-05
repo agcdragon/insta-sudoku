@@ -36,13 +36,18 @@ def upload_image():
         filename = secure_filename(file.filename)
         imagePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(imagePath)
-        s = solver.Solver(imagePath)
-        img = s.displaySolved()
-        solved = filename[:filename.index(".")] + "_solved" + filename[filename.index("."):]
-        solved_filename = os.path.join(app.config['UPLOAD_FOLDER'], solved)
-        cv2.imwrite(solved_filename, img)
-        flash('Image successfully uploaded and solution is displayed below')
-        return render_template('index.html', filename=solved)
+        try:
+            s = solver.Solver(imagePath)
+            img = s.displaySolved()
+            solved = filename[:filename.index(".")] + "_solved" + filename[filename.index("."):]
+            solved_filename = os.path.join(app.config['UPLOAD_FOLDER'], solved)
+            cv2.imwrite(solved_filename, img)
+            flash('Image successfully uploaded and solution is displayed below')
+            return render_template('index.html', filename=solved)
+        except:
+            flash('Sorry, the image was unable to be deciphered, please try another photo')
+            return redirect(request.url)
+
     else:
         flash('Allowed image types are - png, jpg, jpeg, gif')
         return redirect(request.url)

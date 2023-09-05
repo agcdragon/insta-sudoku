@@ -1,7 +1,7 @@
 <!-- //templates/index.html -->
 <html>
 <head>
-<title>Python Flask Upload and display image</title>
+<title>Insta Sudoku</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />        
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
@@ -26,13 +26,23 @@
     </p>
     {% if filename %}
         <div>
-            <img src="{{ url_for('display_image', filename=filename) }}" width=300px>
+            <img src="{{ url_for('display_image', filename=filename) }}" width=400px>
         </div>
     {% endif %}
     <form method="post" action="/" enctype="multipart/form-data">
         <dl>
             <p>
-                <input type="file" name="file" class="form-control" autocomplete="off" required>
+                <input type="file" accept="image/*" onchange="loadFile(event)" name="file" class="form-control" autocomplete="off" required>
+                <img id="output" width=400px/>
+                <script>
+                var loadFile = function(event) {
+                    var output = document.getElementById('output');
+                    output.src = URL.createObjectURL(event.target.files[0]);
+                    output.onload = function() {
+                    URL.revokeObjectURL(output.src)
+                    }
+                };
+                </script>
             </p>
         </dl>
         <p>
